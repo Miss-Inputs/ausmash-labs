@@ -1,4 +1,5 @@
 import os
+from urllib.request import HTTPError
 
 from bottle import Bottle, run, request, template
 
@@ -18,7 +19,10 @@ def get_stuff():
 	region = request.query.region
 	player = request.query.player
 	game = request.query.game
-	scores = ausmash_lib.group_player_score_against_characters(region, player, game)
+	try:
+		scores = ausmash_lib.group_player_score_against_characters(region, player, game)
+	except HTTPError:
+		return template('error', region=region, name=player)
 	return template('scores_view', region=region, player=player, game=game, scores=scores)
 
 run(app, host='0.0.0.0', port=os.environ.get('PORT', 5000))
