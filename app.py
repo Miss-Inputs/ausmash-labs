@@ -1,6 +1,6 @@
 import os
 
-from bottle import Bottle, run, request
+from bottle import Bottle, run, request, template
 
 import the_actual_fucking_thing
 
@@ -11,7 +11,7 @@ def index():
 	main_form = """
 	<html>
 		<head>
-			<title>meow</title>
+			<title>Ausmash: Results against each character</title>
 		</head>
 		<body>
 			<form action="/main" method="get">
@@ -26,12 +26,11 @@ def index():
 	return main_form
 
 @app.route('/main')
-#@app.route('/main/<region>/<player>/<game>')
 def get_stuff():
 	region = request.query.region
 	player = request.query.player
 	game = request.query.game
 	scores = the_actual_fucking_thing.group_player_score_against_characters(region, player, game)
-	return scores
+	return template('scores_view', region=region, player=player, game=game, scores=scores)
 
 run(app, host='0.0.0.0', port=os.environ.get('PORT', 5000))
