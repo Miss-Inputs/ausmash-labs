@@ -8,22 +8,10 @@ app = Bottle()
 
 @app.route('/')
 def index():
-	main_form = """
-	<html>
-		<head>
-			<title>Ausmash: Results against each character</title>
-		</head>
-		<body>
-			<form action="/main" method="get">
-				Region: <input name="region" type="text"><br />
-				Player name: <input name="player" type="text"><br />
-				Game shortname: <input name="game" type="text"><br />
-				<input value="Submit" type="submit" />
-			</form>
-		</body>
-	</html>
-	"""
-	return main_form
+	#I should use IDs...
+	regions = {region['Short']: region['Name'] for region in ausmash_lib.get_regions()}
+	games = {game['Short']: game['Name'] for game in ausmash_lib.get_games()}
+	return template('main_form', regions=regions, games=games)
 
 @app.route('/main')
 def get_stuff():

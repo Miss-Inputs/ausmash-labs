@@ -12,6 +12,16 @@ endpoint = 'https://api.ausmash.com.au'
 def get_request(url):
 	return Request(url, headers={'X-ApiKey': api_key})
 
+def get_regions():
+	url = endpoint + '/regions'
+	with urlopen(get_request(url)) as r:
+		return json.load(r)
+		
+def get_games():
+	url = endpoint + '/games'
+	with urlopen(get_request(url)) as r:
+		return json.load(r)
+
 def get_player(region, name):
 	url = endpoint + '/players/find/{0}/{1}'.format(name, region)
 	with urlopen(get_request(url)) as r:
