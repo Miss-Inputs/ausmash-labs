@@ -2,7 +2,7 @@ import os
 
 from bottle import Bottle, run, request, template
 
-import the_actual_fucking_thing
+import ausmash_lib
 
 app = Bottle()
 
@@ -30,7 +30,7 @@ def get_stuff():
 	region = request.query.region
 	player = request.query.player
 	game = request.query.game
-	scores = the_actual_fucking_thing.group_player_score_against_characters(region, player, game)
+	scores = ausmash_lib.group_player_score_against_characters(region, player, game)
 	return template('scores_view', region=region, player=player, game=game, scores=scores)
 
 run(app, host='0.0.0.0', port=os.environ.get('PORT', 5000))
