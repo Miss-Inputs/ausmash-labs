@@ -19,10 +19,13 @@ def get_stuff():
 	region = request.query.region
 	player = request.query.player
 	game = request.query.game
+	
 	try:
-		scores = ausmash_lib.group_player_score_against_characters(region, player, game)
+		player_id = ausmash_lib.get_player(region, player)['ID']
 	except HTTPError:
 		return template('error', region=region, name=player)
+	
+	scores = ausmash_lib.group_player_score_against_characters(player_id, game)
 	return template('scores_view', region=region, player=player, game=game, scores=scores)
 
 run(app, host='0.0.0.0', port=os.environ.get('PORT', 5000))
