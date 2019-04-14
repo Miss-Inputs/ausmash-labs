@@ -10,7 +10,7 @@
 			Of course, the results can only be as accurate as the character data uploaded to the site by users; if that doesn't get updated then this won't work. So if the results make you say "hmm hang on that doesn't seem right", that's probably why.
 		</p>
 		<p>
-			This was made by <a href="https://twitter.com/Zowayix">Megan Leet</a> in the span of several hours.
+			This was made by <a href="https://twitter.com/Zowayix">Megan Leet</a> in the span of several hours. Source is available here: <a>https://github.com/Zowayix/ausmash-opponent-matchups</a>, and I realise at this point that I've failed to come up with a consistent name for this thing.
 		</p>
 		<form action="/main" method="get">
 			Region: <select name="region">
