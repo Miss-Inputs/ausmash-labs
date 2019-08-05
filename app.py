@@ -1,7 +1,7 @@
 import os
 from urllib.request import HTTPError
 
-from bottle import Bottle, run, request, template
+from bottle import Bottle, run, request, template, static_file
 
 import ausmash_lib
 import ausmash_api
@@ -11,6 +11,10 @@ app = Bottle()
 @app.route('/')
 def index():
 	return template('main_page')
+
+@app.route('/js/<filename:path>')
+def static_js(filename):
+	return static_file(filename, root='./js')
 
 @app.route('/event_elo/main')
 def elo_change_from_event():

@@ -7,10 +7,11 @@
 				border-style: solid;
 			}
 		</style>
+		<script src="/js/sorttable.js"></script>
 	</head>
 	<body>
 		<h1>Elo change for each event in {{game}} for {{player}} from {{region}}</h1>
-		<table>
+		<table class='sortable'>
 			<tr>
 				<th>Tourney</th>
 				<th>Date</th>
