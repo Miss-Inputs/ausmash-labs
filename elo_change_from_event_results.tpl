@@ -25,7 +25,8 @@
 				<td>{{row['Tourney']}}</td>
 				<td>{{row['Date']}}</td>
 				<td>{{row['Event']}}</td>
-				<td>{{'{0}/{1}'.format(row['Placing'], row['Entrants'])}}</td>
+				%#<td>{{'{0}/{1}'.format(row['Placing'], row['Entrants'])}}</td>
+				<td>{{row['Placing']}}</td>
 				<td>{{'{0}-{1}'.format(*row['Score'])}}</td>
 				<td>{{row['Elo change']}}</td>
 			</tr>

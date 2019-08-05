@@ -77,7 +77,9 @@ def summarize_player_events(player_id, game):
 		row['Event'] = result['Event']['Name']
 		row['Placing'] = result['Result']
 		event_id = result['Event']['ID']
-		row['Entrants'] = len(ausmash_api.get_event_results(event_id)) #This seems inefficient and I'm not sure if there would be a better way to do this…
+
+		#row['Entrants'] = len(ausmash_api.get_event_results(event_id)) #This seems inefficient and I'm not sure if there would be a better way to do this…
+		#Yeah nah that's way too slow kiddo
 
 		wins, losses = count_wins_losses(matches[event_id], player_id)
 		row['Score'] = (wins, losses)
