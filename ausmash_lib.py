@@ -1,43 +1,92 @@
 #!/usr/bin/env python3
 
-import json
 import math
-import os
-from urllib.request import Request, urlopen
 
-api_key = os.environ['API_KEY']
+from ausmash_api import *
 
-endpoint = 'https://api.ausmash.com.au'
+def get_player_matches_in_multiple_events(player_id, event_ids):
+	all_matches = get_player_matches(player_id)
 
-def get_request(url):
-	return Request(url, headers={'X-ApiKey': api_key})
+	matches = {}
+	for event_id in event_ids:
+		event_matches = [match for match in all_matches if match['Event']['ID'] == event_id]
+		matches[event_id] = event_matches
+	return matches
 
-def get_regions():
-	url = endpoint + '/regions'
-	with urlopen(get_request(url)) as r:
-		return json.load(r)
-		
-def get_games():
-	url = endpoint + '/games'
-	with urlopen(get_request(url)) as r:
-		return json.load(r)
-		
-def get_characters(game_shortname):
-	url = endpoint + '/characters'
-	with urlopen(get_request(url)) as r:
-		return [character for character in json.load(r) if character['GameShort'] == game_shortname]
+def get_player_matches_in_event(player_id, event_id, tourney_date=None):
+	#Seems for multi-day events (majors), Ausmash acts as though everything happens on the last day, so no edge case to worry about there
+	if tourney_date:
+		matches = get_player_matches(player_id, tourney_date, tourney_date)
+	else:
+		matches = get_player_matches(player_id)
 
-def get_player(region, name):
-	url = endpoint + '/players/find/{0}/{1}'.format(name, region)
-	with urlopen(get_request(url)) as r:
-		return json.load(r)
-		
-def get_player_matches(player_id):
-	url = endpoint + '/players/{0}/matches'.format(player_id)
-	with urlopen(get_request(url)) as r:
-		return json.load(r)
+	if not matches:
+		return []
+	for match in matches:
+		if match['Event']['ID'] != event_id:
+			continue
+		yield match
+	return []
 
+def get_elo_change_from_matches(matches, player_id):
+	total = 0
+	for match in matches:
+		change = match['EloMovement']
+		if change is None:
+			#Tournament is too recent, Elo for this week hasn't been processed yet
+			continue
 
+		if match['Winner'] is None:
+			#Player just lost to someone who isn't in the database
+			is_winner = False
+		else:
+			is_winner = match['Winner']['ID'] == player_id
+
+		if is_winner:
+			total += change
+		else:
+			total -= change
+	return total
+
+def count_wins_losses(matches, player_id):
+	wins = 0
+	losses = 0
+	for match in matches:
+		if match['Winner'] is None:
+			#Player just lost to someone who isn't in the database
+			is_winner = False
+		else:
+			is_winner = match['Winner']['ID'] == player_id
+
+		if is_winner:
+			wins += 1
+		else:
+			losses += 1
+	return wins, losses	
+
+def summarize_player_events(player_id, game):
+	results = [result for result in get_player_event_results(player_id) if result['Event']['Game']['Short'] == game]
+	rows = []
+	event_ids = [result['Event']['ID'] for result in results]
+	matches = get_player_matches_in_multiple_events(player_id, event_ids)
+
+	for result in results:
+		row = {}
+		row['Tourney'] = result['Tourney']['Name']
+		row['Date'] = result['Tourney']['TourneyDate']
+		row['Event'] = result['Event']['Name']
+		row['Placing'] = result['Result']
+		event_id = result['Event']['ID']
+		row['Entrants'] = len(get_event_results(event_id)) #This seems inefficient and I'm not sure if there would be a better way to do this…
+
+		wins, losses = count_wins_losses(matches[event_id], player_id)
+		row['Score'] = (wins, losses)
+		elo_change = get_elo_change_from_matches(matches[event_id], player_id)
+		row['Elo change'] = elo_change
+
+		rows.append(row)
+
+	return rows
 		
 def get_player_matches_for_game(player_id, game_shortname):
 	matches = get_player_matches(player_id)
@@ -47,6 +96,7 @@ def get_player_matches_for_game(player_id, game_shortname):
 		if match['Event']['Game']['Short'] != game_shortname:
 			continue
 		yield match
+	return []
 			
 def get_player_results_against_characters(player_id, game_shortname):
 	results = {}
@@ -108,4 +158,3 @@ def group_player_score_against_characters(player_id, game_shortname):
 		elif score > 1:
 			groups['Mostly win'].append(character)
 	return groups
-	
