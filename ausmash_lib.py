@@ -2,10 +2,10 @@
 
 import math
 
-from ausmash_api import *
+import ausmash_api
 
 def get_player_matches_in_multiple_events(player_id, event_ids):
-	all_matches = get_player_matches(player_id)
+	all_matches = ausmash_api.get_player_matches(player_id)
 
 	matches = {}
 	for event_id in event_ids:
@@ -16,9 +16,9 @@ def get_player_matches_in_multiple_events(player_id, event_ids):
 def get_player_matches_in_event(player_id, event_id, tourney_date=None):
 	#Seems for multi-day events (majors), Ausmash acts as though everything happens on the last day, so no edge case to worry about there
 	if tourney_date:
-		matches = get_player_matches(player_id, tourney_date, tourney_date)
+		matches = ausmash_api.get_player_matches(player_id, tourney_date, tourney_date)
 	else:
-		matches = get_player_matches(player_id)
+		matches = ausmash_api.get_player_matches(player_id)
 
 	if not matches:
 		return []
@@ -65,7 +65,7 @@ def count_wins_losses(matches, player_id):
 	return wins, losses	
 
 def summarize_player_events(player_id, game):
-	results = [result for result in get_player_event_results(player_id) if result['Event']['Game']['Short'] == game]
+	results = [result for result in ausmash_api.get_player_event_results(player_id) if result['Event']['Game']['Short'] == game]
 	rows = []
 	event_ids = [result['Event']['ID'] for result in results]
 	matches = get_player_matches_in_multiple_events(player_id, event_ids)
@@ -77,7 +77,7 @@ def summarize_player_events(player_id, game):
 		row['Event'] = result['Event']['Name']
 		row['Placing'] = result['Result']
 		event_id = result['Event']['ID']
-		row['Entrants'] = len(get_event_results(event_id)) #This seems inefficient and I'm not sure if there would be a better way to do this…
+		row['Entrants'] = len(ausmash_api.get_event_results(event_id)) #This seems inefficient and I'm not sure if there would be a better way to do this…
 
 		wins, losses = count_wins_losses(matches[event_id], player_id)
 		row['Score'] = (wins, losses)
@@ -89,7 +89,7 @@ def summarize_player_events(player_id, game):
 	return rows
 		
 def get_player_matches_for_game(player_id, game_shortname):
-	matches = get_player_matches(player_id)
+	matches = ausmash_api.get_player_matches(player_id)
 	if not matches:
 		return []
 	for match in matches:
@@ -119,7 +119,7 @@ def get_player_results_against_characters(player_id, game_shortname):
 	
 def get_player_score_against_characters(player_id, game_shortname):
 	results = get_player_results_against_characters(player_id, game_shortname)
-	characters = get_characters(game_shortname)
+	characters = ausmash_api.get_characters(game_shortname)
 	
 	scores = {}
 	for character in characters:
