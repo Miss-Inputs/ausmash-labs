@@ -10,6 +10,7 @@
 			Currently this exists:
 			<li>
 				<ul><a href="/character_matchups/main">Opponent character matchups</a>: View results against opposing characters</ul>
+				<ul><a href="/event_elo/main">Elo change from events</a>: View overall Elo change from each event</ul>
 			</li>
 		</p>
 	</body>
