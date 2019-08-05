@@ -4,6 +4,7 @@ from urllib.request import HTTPError
 from bottle import Bottle, run, request, template
 
 import ausmash_lib
+import ausmash_api
 
 app = Bottle()
 
@@ -14,8 +15,8 @@ def index():
 @app.route('/event_elo/main')
 def elo_change_from_event():
 	#I should use IDs...
-	regions = {region['Short']: region['Name'] for region in ausmash_lib.get_regions()}
-	games = {game['Short']: game['Name'] for game in ausmash_lib.get_games()}
+	regions = {region['Short']: region['Name'] for region in ausmash_api.get_regions()}
+	games = {game['Short']: game['Name'] for game in ausmash_api.get_games()}
 	return template('elo_change_from_event_main', regions=regions, games=games)
 
 @app.route('/event_elo/results')
@@ -26,7 +27,7 @@ def elo_change_from_event_results():
 	game = request.query.game #pylint: disable=no-member
 	
 	try:
-		player_id = ausmash_lib.get_player(region, player)['ID']
+		player_id = ausmash_api.get_player(region, player)['ID']
 	except HTTPError:
 		return template('character_matchups_error', region=region, name=player)
 	
@@ -36,8 +37,8 @@ def elo_change_from_event_results():
 @app.route('/character_matchups/main')
 def character_matchups():
 	#I should use IDs...
-	regions = {region['Short']: region['Name'] for region in ausmash_lib.get_regions()}
-	games = {game['Short']: game['Name'] for game in ausmash_lib.get_games()}
+	regions = {region['Short']: region['Name'] for region in ausmash_api.get_regions()}
+	games = {game['Short']: game['Name'] for game in ausmash_api.get_games()}
 	return template('character_matchups_main', regions=regions, games=games)
 
 @app.route('/character_matchups/results')
@@ -47,7 +48,7 @@ def character_matchup_results():
 	game = request.query.game #pylint: disable=no-member
 	
 	try:
-		player_id = ausmash_lib.get_player(region, player)['ID']
+		player_id = ausmash_api.get_player(region, player)['ID']
 	except HTTPError:
 		return template('character_matchups_error', region=region, name=player)
 	
