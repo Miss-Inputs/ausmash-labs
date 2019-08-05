@@ -3,7 +3,7 @@
 import json
 import os
 from urllib.request import Request, urlopen
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote
 
 api_key = os.environ['API_KEY']
 
@@ -28,7 +28,7 @@ def get_characters(game_shortname):
 		return [character for character in json.load(r) if character['GameShort'] == game_shortname]
 
 def get_player(region, name):
-	url = endpoint + '/players/find/{0}/{1}'.format(name, region)
+	url = endpoint + '/players/find/{0}/{1}'.format(quote(name), region)
 	with urlopen(get_request(url)) as r:
 		return json.load(r)
 		
