@@ -4,7 +4,7 @@
 	</head>
 	<body>
 		<p>
-			This page is where <a href="https://twitter.com/Zowayix">Zowayix</a> puts her random crap that uses the <a href="https://ausmash.com.au/">Ausmash</a> API for various messing around with of things. Source for stuff is on <a href="https://github.com/Zowayix/ausmash-tools">Github</a> in case it becomes useful to anyone else.
+			This page is where <a href="https://twitter.com/Zowayix">Zowayix</a> puts her random crap that uses the <a href="https://ausmash.com.au/">Ausmash</a> API for various messing around with stuff. Source for stuff is on <a href="https://github.com/Zowayix/ausmash-tools">Github</a> in case it becomes useful to anyone else.
 		</p>
 		<p>
 			Currently this exists:
