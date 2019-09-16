@@ -6,6 +6,9 @@
 				border-width: 1px;
 				border-style: solid;
 			}
+			tr.redemption {
+				background-color: #dddddd;
+			}
 		</style>
 		<script src="/js/sorttable.js"></script>
 	</head>
@@ -22,7 +25,8 @@
 			</tr>
 
 		%for row in sorted(result_summary, key=lambda row: row['Elo change'], reverse=True):
-			<tr>
+			%event_name_lower = row['Event'].lower()
+			<tr{{!' class="redemption"' if ('redemption' in event_name_lower or 'amateur' in event_name_lower or 'ammies' in event_name_lower) else ''}}>
 				<td>{{row['Tourney']}}</td>
 				<td>{{row['Date']}}</td>
 				<td>{{row['Event']}}</td>
