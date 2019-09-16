@@ -89,6 +89,14 @@ def summarize_player_events(player_id, game):
 		rows.append(row)
 
 	return rows
+
+def get_tourney_elo_changes(result_summary):
+	results = {}
+	for row in result_summary:
+		if row['Tourney'] not in results:
+			results[row['Tourney']] = 0
+		results[row['Tourney']] += row['Elo change']
+	return results
 		
 def get_player_matches_for_game(player_id, game_shortname):
 	matches = ausmash_api.get_player_matches(player_id)

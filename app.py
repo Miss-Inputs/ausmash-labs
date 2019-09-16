@@ -36,7 +36,8 @@ def elo_change_from_event_results():
 		return template('character_matchups_error', region=region, name=player)
 	
 	result_summary = ausmash_lib.summarize_player_events(player_id, game)
-	return template('elo_change_from_event_results', region=region, player=player, game=game, result_summary=result_summary)
+	tourney_elo_changes = ausmash_lib.get_tourney_elo_changes(result_summary)
+	return template('elo_change_from_event_results', region=region, player=player, game=game, result_summary=result_summary, tourney_elo_changes=tourney_elo_changes)
 
 @app.route('/character_matchups/main')
 def character_matchups():

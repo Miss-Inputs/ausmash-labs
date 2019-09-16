@@ -22,6 +22,7 @@
 				<th>Placing</th>
 				<th>Score</th>
 				<th>Elo change</th>
+				<th>Tourney Elo change</th>
 			</tr>
 
 		%for row in sorted(result_summary, key=lambda row: row['Elo change'], reverse=True):
@@ -34,6 +35,7 @@
 				<td>{{row['Placing']}}</td>
 				<td>{{'{0}-{1}'.format(*row['Score'])}}</td>
 				<td>{{row['Elo change']}}</td>
+				<td>{{tourney_elo_changes.get(row['Tourney'])}}</td>
 			</tr>
 		%end
 		</table>
