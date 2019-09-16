@@ -114,9 +114,11 @@ def get_player_results_against_characters(player_id, game_shortname):
 		for opponent_char in opponent_characters:
 			char_id = opponent_char['ID']
 			if char_id not in results:
-				results[char_id] = {'Wins': 0, 'Losses': 0}
+				results[char_id] = {'Wins': 0, 'Losses': 0, 'Elo gain': 0, 'Elo loss': 0}
 			
 			results[char_id]['Wins' if is_winner else 'Losses'] += 1
+			if match['EloMovement'] is not None:
+				results[char_id]['Elo gain' if is_winner else 'Elo loss'] += match['EloMovement']
 	return results
 	
 def get_player_matchups_against_characters(player_id, game_shortname):
@@ -128,7 +130,7 @@ def get_player_matchups_against_characters(player_id, game_shortname):
 		name = character['Name']
 		if character['ID'] not in results:
 			#Character not faced
-			matchups[name] = {'Wins': 0, 'Losses': 0, 'Ratio': None}
+			matchups[name] = {'Wins': 0, 'Losses': 0, 'Ratio': None, 'Elo gain': 0, 'Elo loss': 0}
 		else:
 			char_results = results[character['ID']]
 			wins = char_results['Wins']
@@ -138,7 +140,9 @@ def get_player_matchups_against_characters(player_id, game_shortname):
 				ratio = math.inf
 			else:
 				ratio = wins / losses
-			matchups[name] = {'Wins': wins, 'Losses': losses, 'Ratio': ratio}
+			elo_gain = char_results['Elo gain']
+			elo_loss = char_results['Elo loss']
+			matchups[name] = {'Wins': wins, 'Losses': losses, 'Ratio': ratio, 'Elo gain': elo_gain, 'Elo loss': elo_loss}
 		
 	return matchups
 

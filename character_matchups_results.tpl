@@ -31,6 +31,10 @@
 				<th>Total</th>
 				<th>Win/Loss Ratio</th>
 				<th>Win/Loss Difference</th>
+				<th>Elo gain</th>
+				<th>Elo loss</th>
+				<th>Elo change</th>
+				<th>Avg Elo change per match</th>
 			</tr>
 
 		%for name, row in matchups.items():
@@ -38,9 +42,15 @@
 				<td>{{name}}</td>
 				<td>{{row['Wins']}}</td>
 				<td>{{row['Losses']}}</td>
-				<td>{{row['Wins'] + row['Losses']}}</td>
+				%total = row['Wins'] + row['Losses']
+				<td>{{total}}</td>
 				<td>{{'Never played' if row['Ratio'] is None else 'Never lost' if row['Ratio'] == math.inf else round(row['Ratio'], 2)}}</td>
 				<td>{{row['Wins'] - row['Losses']}}</td>
+				<td>{{row['Elo gain']}}</td>
+				<td>{{row['Elo loss']}}</td>
+				%elo_change = row['Elo gain'] - row['Elo loss']
+				<td>{{elo_change}}</td>
+				<td>{{round(elo_change / total, 2) if total != 0 else 'N/A'}}</td>
 			</tr>
 		%end
 		</table>
