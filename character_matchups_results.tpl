@@ -54,5 +54,9 @@
 			</tr>
 		%end
 		</table>
+		<p>
+			<a href='/character_matchups/main'>Go back</a>
+			<a href='/'>Go back home</a>
+		</p>
 	</body>
 </html>

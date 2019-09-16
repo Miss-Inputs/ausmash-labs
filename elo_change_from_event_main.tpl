@@ -22,5 +22,8 @@
 			<br />
 			<input value="Submit" type="submit" />
 		</form>
+		<p>
+			<a href='/'>Go back home</a>
+		</p>
 	</body>
 </html>

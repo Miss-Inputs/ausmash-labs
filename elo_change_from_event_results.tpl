@@ -33,5 +33,9 @@
 			</tr>
 		%end
 		</table>
+		<p>
+			<a href='/event_elo/main'>Go back</a>
+			<a href='/'>Go back home</a>
+		</p>
 	</body>
 </html>
