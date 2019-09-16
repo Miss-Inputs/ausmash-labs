@@ -119,25 +119,30 @@ def get_player_results_against_characters(player_id, game_shortname):
 			results[char_id]['Wins' if is_winner else 'Losses'] += 1
 	return results
 	
-def get_player_score_against_characters(player_id, game_shortname):
+def get_player_matchups_against_characters(player_id, game_shortname):
 	results = get_player_results_against_characters(player_id, game_shortname)
 	characters = ausmash_api.get_characters(game_shortname)
 	
-	scores = {}
+	matchups = {}
 	for character in characters:
+		name = character['Name']
 		if character['ID'] not in results:
-			scores[character['Name']] = None
+			#Character not faced
+			matchups[name] = {'Wins': 0, 'Losses': 0, 'Ratio': None}
 		else:
 			char_results = results[character['ID']]
-			if char_results['Losses'] == 0:
-				scores[character['Name']] = math.inf
+			wins = char_results['Wins']
+			losses = char_results['Losses']
+			if losses == 0:
+				#Never lost
+				ratio = math.inf
 			else:
-				scores[character['Name']] = char_results['Wins'] / char_results['Losses']
-	return scores
-	
-def group_player_score_against_characters(player_id, game_shortname):
-	scores = get_player_score_against_characters(player_id, game_shortname)
-	
+				ratio = wins / losses
+			matchups[name] = {'Wins': wins, 'Losses': losses, 'Ratio': ratio}
+		
+	return matchups
+
+def group_player_character_matchups(matchups):	
 	groups = {
 		'Always win': [],
 		'Mostly win': [],
@@ -146,17 +151,18 @@ def group_player_score_against_characters(player_id, game_shortname):
 		'Never won': [],
 		'Never played': [],
 	}
-	for character, score in sorted(scores.items(), key=lambda t: -1 if t[1] is None else t[1]):
-		if score is None:
+	for character, matchup in sorted(matchups.items(), key=lambda t: -1 if t[1]['Ratio'] is None else t[1]['Ratio']):
+		ratio = matchup['Ratio']
+		if ratio is None:
 			groups['Never played'].append(character)
-		elif score == 0:
+		elif ratio == 0:
 			groups['Never won'].append(character)
-		elif score == 1:
+		elif ratio == 1:
 			groups['Neutral'].append(character)
-		elif score == math.inf:
+		elif ratio == math.inf:
 			groups['Always win'].append(character)
-		elif score < 1:
+		elif ratio < 1:
 			groups['Mostly lose'].append(character)
-		elif score > 1:
+		elif ratio > 1:
 			groups['Mostly win'].append(character)
 	return groups

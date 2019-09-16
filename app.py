@@ -55,8 +55,9 @@ def character_matchup_results():
 		player_id = ausmash_api.get_player(region, player)['ID']
 	except HTTPError:
 		return template('character_matchups_error', region=region, name=player)
-	
-	scores = ausmash_lib.group_player_score_against_characters(player_id, game)
-	return template('character_matchups_results', region=region, player=player, game=game, scores=scores)
+
+	matchups = ausmash_lib.get_player_matchups_against_characters(player_id, game)
+	summary = ausmash_lib.group_player_character_matchups(matchups)
+	return template('character_matchups_results', region=region, player=player, game=game, matchups=matchups, summary=summary)
 
 run(app, host='0.0.0.0', port=os.environ.get('PORT', 5000))
