@@ -18,7 +18,7 @@
 			%#{{', '.join(char_list)}}<br />
 			<tr>
 				<td>{{group}}</td>
-				%#TODO: Get images from somewhere
+				%#I want to have images here one day but they'd probably have to be hosted locally and then I just can't be bothered adding them all I guess
 				<td>{{', '.join(char_list)}}</td>
 			</tr>
 		%end
