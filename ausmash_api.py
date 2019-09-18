@@ -2,6 +2,7 @@
 
 import json
 import os
+from functools import lru_cache
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode, quote
 
@@ -12,11 +13,13 @@ endpoint = 'https://api.ausmash.com.au'
 def get_request(url):
 	return Request(url, headers={'X-ApiKey': api_key})
 
+@lru_cache(maxsize=None)
 def get_regions():
 	url = endpoint + '/regions'
 	with urlopen(get_request(url)) as r:
 		return json.load(r)
 		
+@lru_cache(maxsize=None)
 def get_games():
 	url = endpoint + '/games'
 	with urlopen(get_request(url)) as r:
