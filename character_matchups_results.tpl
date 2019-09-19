@@ -14,8 +14,6 @@
 		<h1>Win rates against each character in {{game}} for {{player}} from {{region}}</h1>
 		<table>
 		%for group, char_list in summary.items():
-			%#<h2>{{group}}</h2>
-			%#{{', '.join(char_list)}}<br />
 			<tr>
 				<td>{{group}}</td>
 				%#I want to have images here one day but they'd probably have to be hosted locally and then I just can't be bothered adding them all I guess
@@ -29,7 +27,8 @@
 				<th>Wins</th>
 				<th>Losses</th>
 				<th>Total</th>
-				<th>Win/Loss Ratio</th>
+				<th>Win%</th>
+				%#<th>Win/Loss Ratio</th>
 				<th>Win/Loss Difference</th>
 				<th>Elo gain</th>
 				<th>Elo loss</th>
@@ -44,7 +43,12 @@
 				<td>{{row['Losses']}}</td>
 				%total = row['Wins'] + row['Losses']
 				<td>{{total}}</td>
-				<td>{{'Never played' if row['Ratio'] is None else 'Never lost' if row['Ratio'] == math.inf else round(row['Ratio'], 2)}}</td>
+				%if total == 0:
+					<td sorttable_customkey="-1">Never played</td>
+				%else:
+					<td>{{'{0:.0%}'.format(row['Wins'] / total)}}</td>
+				%end
+				%#<td>{{'Never played' if row['Ratio'] is None else 'Never lost' if row['Ratio'] == math.inf else round(row['Ratio'], 2)}}</td>
 				<td>{{row['Wins'] - row['Losses']}}</td>
 				<td>{{row['Elo gain']}}</td>
 				<td>{{row['Elo loss']}}</td>
