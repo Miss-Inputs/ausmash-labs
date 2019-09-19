@@ -129,29 +129,43 @@ def get_player_results_against_characters(player_id, game_shortname):
 				results[char_id]['Elo gain' if is_winner else 'Elo loss'] += match['EloMovement']
 	return results
 	
-def get_player_matchups_against_characters(player_id, game_shortname):
+equivalent_echo_fighters = {
+	'Peach/Daisy': ('Peach', 'Daisy'),
+	'Pits': ('Pit', 'Dark Pit'),
+	'Samuses': ('Samus', 'Dark Samus'),
+	'Belmonts': ('Simon', 'Richter'),
+}
+
+def get_player_matchups_against_characters(player_id, game_shortname, combine_echoes=False):
 	results = get_player_results_against_characters(player_id, game_shortname)
 	characters = ausmash_api.get_characters(game_shortname)
 	
 	matchups = {}
 	for character in characters:
 		name = character['Name']
-		if character['ID'] not in results:
-			#Character not faced
+		if combine_echoes:
+			for combined, fighters in equivalent_echo_fighters.items():
+				if name in fighters:
+					name = combined
+					break
+
+		if name not in matchups:
 			matchups[name] = {'Wins': 0, 'Losses': 0, 'Ratio': None, 'Elo gain': 0, 'Elo loss': 0}
-		else:
+
+		if character['ID'] in results:
 			char_results = results[character['ID']]
-			wins = char_results['Wins']
-			losses = char_results['Losses']
+			wins = char_results['Wins'] + matchups[name]['Wins']
+			losses = char_results['Losses'] + matchups[name]['Losses']
+
 			if losses == 0:
 				#Never lost
 				ratio = math.inf
 			else:
 				ratio = wins / losses
-			elo_gain = char_results['Elo gain']
-			elo_loss = char_results['Elo loss']
+			elo_gain = char_results['Elo gain'] + matchups[name]['Elo gain']
+			elo_loss = char_results['Elo loss'] + matchups[name]['Elo loss']
 			matchups[name] = {'Wins': wins, 'Losses': losses, 'Ratio': ratio, 'Elo gain': elo_gain, 'Elo loss': elo_loss}
-		
+			
 	return matchups
 
 def group_player_character_matchups(matchups):	

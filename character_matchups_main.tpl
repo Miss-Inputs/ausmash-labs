@@ -23,6 +23,8 @@
 			%end
 			</select>
 			<br />
+			<input type="checkbox" name="combine_echoes" checked="checked" id="combineEchoes" />
+			<label for="combineEchoes">Combine echo fighters that are basically equivalent (Peach/Daisy, etc)</label><br />
 			<input value="Submit" type="submit" />
 		</form>
 		<p>
