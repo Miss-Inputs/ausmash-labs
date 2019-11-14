@@ -124,7 +124,7 @@ def get_player_results_against_characters(player_id, game_shortname):
 			if char_id not in results:
 				results[char_id] = {'Wins': 0, 'Losses': 0, 'Elo gain': 0, 'Elo loss': 0}
 			
-			results[char_id]['Wins' if is_winner else 'Losses'] += 1
+			results[char_id]['Wins' if is_winner else 'Losses'] += (1 / len(opponent_characters))
 			if match['EloMovement'] is not None:
 				results[char_id]['Elo gain' if is_winner else 'Elo loss'] += match['EloMovement']
 	return results
