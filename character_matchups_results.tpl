@@ -35,21 +35,25 @@
 				<th>Elo change</th>
 				<th>Avg Elo change per match</th>
 			</tr>
+		<%
+			def format_float(f):
+				return str(int(f) if float(f).is_integer() else round(f, 2))
+			end
+		%>
 
 		%for name, row in matchups.items():
 			<tr>
 				<td>{{name}}</td>
-				<td>{{row['Wins']}}</td>
-				<td>{{row['Losses']}}</td>
+				<td>{{format_float(row['Wins'])}}</td>
+				<td>{{format_float(row['Losses'])}}</td>
 				%total = row['Wins'] + row['Losses']
-				<td>{{total}}</td>
+				<td>{{format_float(total)}}</td>
 				%if total == 0:
 					<td sorttable_customkey="-1">Never played</td>
 				%else:
 					<td>{{'{0:.0%}'.format(row['Wins'] / total)}}</td>
 				%end
-				%#<td>{{'Never played' if row['Ratio'] is None else 'Never lost' if row['Ratio'] == math.inf else round(row['Ratio'], 2)}}</td>
-				<td>{{row['Wins'] - row['Losses']}}</td>
+				<td>{{format_float(row['Wins'] - row['Losses'])}}</td>
 				<td>{{row['Elo gain']}}</td>
 				<td>{{row['Elo loss']}}</td>
 				%elo_change = row['Elo gain'] - row['Elo loss']
