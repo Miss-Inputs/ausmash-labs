@@ -38,7 +38,7 @@ def get_player(region, name):
 def get_player_matches(player_id, start_date=None, end_date=None):
 	url = endpoint + '/players/{0}/matches'.format(player_id)
 	if start_date is not None or end_date is not None:
-		url += '?' + urlencode({'start_date': start_date, 'end_date': end_date})
+		url += '?' + urlencode({'startDate': start_date, 'endDate': end_date})
 
 	with urlopen(get_request(url)) as r:
 		return json.load(r)
@@ -46,7 +46,7 @@ def get_player_matches(player_id, start_date=None, end_date=None):
 def get_player_event_results(player_id, start_date=None, end_date=None):
 	url = endpoint + '/players/{0}/results'.format(player_id)
 	if start_date is not None or end_date is not None:
-		url += '?' + urlencode({'start_date': start_date, 'end_date': end_date})
+		url += '?' + urlencode({'startDate': start_date, 'endDate': end_date})
 
 	with urlopen(get_request(url)) as r:
 		return json.load(r)
