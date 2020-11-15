@@ -2,10 +2,11 @@
 import os
 from urllib.request import HTTPError
 
-from bottle import Bottle, run, request, template, static_file
+from datetime import date
+from bottle import Bottle, request, run, static_file, template
 
-import ausmash_lib
 import ausmash_api
+import ausmash_lib
 
 app = Bottle()
 
@@ -53,13 +54,17 @@ def character_matchup_results():
 	player = request.query.player #pylint: disable=no-member
 	game = request.query.game #pylint: disable=no-member
 	combine_echoes = request.query.combine_echoes == 'on' #pylint: disable=no-member
+	min_date_param = request.query.minimum_date
+	min_date = None
+	if min_date_param:
+		min_date = date.fromisoformat(min_date_param)
 	
 	try:
 		player_id = ausmash_api.get_player(region, player)['ID']
 	except HTTPError:
 		return template('character_matchups_error', region=region, name=player)
 
-	matchups = ausmash_lib.get_player_matchups_against_characters(player_id, game, combine_echoes=combine_echoes)
+	matchups = ausmash_lib.get_player_matchups_against_characters(player_id, game, combine_echoes=combine_echoes, min_date=min_date)
 	summary = ausmash_lib.group_player_character_matchups(matchups)
 	return template('character_matchups_results', region=region, player=player, game=game, matchups=matchups, summary=summary)
 

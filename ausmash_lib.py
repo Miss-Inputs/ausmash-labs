@@ -98,8 +98,8 @@ def get_tourney_elo_changes(result_summary):
 		results[row['Tourney']] += row['Elo change']
 	return results
 		
-def get_player_matches_for_game(player_id, game_shortname):
-	matches = ausmash_api.get_player_matches(player_id)
+def get_player_matches_for_game(player_id, game_shortname, min_date=None):
+	matches = ausmash_api.get_player_matches(player_id, start_date=min_date)
 	if not matches:
 		return []
 	for match in matches:
@@ -108,9 +108,9 @@ def get_player_matches_for_game(player_id, game_shortname):
 		yield match
 	return []
 			
-def get_player_results_against_characters(player_id, game_shortname):
+def get_player_results_against_characters(player_id, game_shortname, min_date=None):
 	results = {}
-	matches = get_player_matches_for_game(player_id, game_shortname)
+	matches = get_player_matches_for_game(player_id, game_shortname, min_date)
 	for match in matches:
 		if match['Winner'] is None:
 			#Player just lost to someone who isn't in the database
@@ -136,8 +136,8 @@ equivalent_echo_fighters = {
 	'Belmonts': ('Simon', 'Richter'),
 }
 
-def get_player_matchups_against_characters(player_id, game_shortname, combine_echoes=False):
-	results = get_player_results_against_characters(player_id, game_shortname)
+def get_player_matchups_against_characters(player_id, game_shortname, combine_echoes=False, min_date=None):
+	results = get_player_results_against_characters(player_id, game_shortname, min_date)
 	characters = ausmash_api.get_characters(game_shortname)
 	
 	matchups = {}

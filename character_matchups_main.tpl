@@ -28,6 +28,8 @@
 			<br />
 			<input type="checkbox" name="combine_echoes" checked="checked" id="combineEchoes" />
 			<label for="combineEchoes">Combine echo fighters that are basically equivalent (Peach/Daisy, etc)</label><br />
+			<label for="minimum_date">Only consider matches that happened on or after this date (or leave blank):</label>
+			<input type="date" name="minimum_date" id="minimum_date"/>
 			<input value="Submit" type="submit" />
 		</form>
 		<p>
