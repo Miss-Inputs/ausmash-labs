@@ -108,10 +108,13 @@ def get_player_matches_for_game(player_id, game_shortname, min_date=None):
 		yield match
 	return []
 			
-def get_player_results_against_characters(player_id, game_shortname, min_date=None):
+def get_player_results_against_characters(player_id, game_shortname, min_date=None, exclude_low_level=False):
 	results = {}
 	matches = get_player_matches_for_game(player_id, game_shortname, min_date)
 	for match in matches:
+		if exclude_low_level and match['EloLoserOldScore'] is not None and match['EloLoserOldScore'] <= 1000:
+			continue
+
 		if match['Winner'] is None:
 			#Player just lost to someone who isn't in the database
 			#This means they are the loser though, because if not, the match wouldn't be returned from get_player_matches_for_game
@@ -136,8 +139,8 @@ equivalent_echo_fighters = {
 	'Belmonts': ('Simon', 'Richter'),
 }
 
-def get_player_matchups_against_characters(player_id, game_shortname, combine_echoes=False, min_date=None):
-	results = get_player_results_against_characters(player_id, game_shortname, min_date)
+def get_player_matchups_against_characters(player_id, game_shortname, combine_echoes=False, min_date=None, exclude_low_level=False):
+	results = get_player_results_against_characters(player_id, game_shortname, min_date, exclude_low_level)
 	characters = ausmash_api.get_characters(game_shortname)
 	
 	matchups = {}
