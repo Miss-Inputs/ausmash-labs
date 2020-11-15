@@ -112,15 +112,17 @@ def get_player_results_against_characters(player_id, game_shortname, min_date=No
 	results = {}
 	matches = get_player_matches_for_game(player_id, game_shortname, min_date)
 	for match in matches:
-		if exclude_low_level and match['EloLoserOldScore'] is not None and match['EloLoserOldScore'] <= 1000:
-			continue
-
+		
 		if match['Winner'] is None:
 			#Player just lost to someone who isn't in the database
 			#This means they are the loser though, because if not, the match wouldn't be returned from get_player_matches_for_game
 			is_winner = False
 		else:
 			is_winner = match['Winner']['ID'] == player_id
+
+		if is_winner and exclude_low_level and match['EloLoserOldScore'] is not None and match['EloLoserOldScore'] <= 1000:
+			continue
+
 		opponent_characters = match['LoserCharacters'] if is_winner else match['WinnerCharacters']
 		for opponent_char in opponent_characters:
 			char_id = opponent_char['ID']
