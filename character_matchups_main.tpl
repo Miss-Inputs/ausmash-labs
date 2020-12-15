@@ -32,6 +32,8 @@
 			<input type="date" name="minimum_date" id="minimumDate"/><br />
 			<input type="checkbox" name="exclude_low_level" id="excludeLowLevel" />
 			<label for="excludeLowLevel">Exclude matches against players with less than or equal to 1000 Elo</label><br />
+			<input type="checkbox" name="partial_usage" id="partialUsage" />
+			<label for="partialUsage">If multiple characters are used in a set, count each as a fraction of a usage</label><br />
 			<input value="Submit" type="submit" />
 		</form>
 		<p>

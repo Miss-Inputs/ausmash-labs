@@ -108,7 +108,7 @@ def get_player_matches_for_game(player_id, game_shortname, min_date=None):
 		yield match
 	return []
 			
-def get_player_results_against_characters(player_id, game_shortname, min_date=None, exclude_low_level=False):
+def get_player_results_against_characters(player_id, game_shortname, min_date=None, exclude_low_level=False, partial_usage=True):
 	results = {}
 	matches = get_player_matches_for_game(player_id, game_shortname, min_date)
 	for match in matches:
@@ -129,7 +129,7 @@ def get_player_results_against_characters(player_id, game_shortname, min_date=No
 			if char_id not in results:
 				results[char_id] = {'Wins': 0, 'Losses': 0, 'Elo gain': 0, 'Elo loss': 0}
 			
-			results[char_id]['Wins' if is_winner else 'Losses'] += (1 / len(opponent_characters))
+			results[char_id]['Wins' if is_winner else 'Losses'] += (1 / len(opponent_characters)) if partial_usage else 1
 			if match['EloMovement'] is not None:
 				results[char_id]['Elo gain' if is_winner else 'Elo loss'] += match['EloMovement']
 	return results
@@ -141,8 +141,8 @@ equivalent_echo_fighters = {
 	'Belmonts': ('Simon', 'Richter'),
 }
 
-def get_player_matchups_against_characters(player_id, game_shortname, combine_echoes=False, min_date=None, exclude_low_level=False):
-	results = get_player_results_against_characters(player_id, game_shortname, min_date, exclude_low_level)
+def get_player_matchups_against_characters(player_id, game_shortname, combine_echoes=False, min_date=None, exclude_low_level=False, partial_usage=True):
+	results = get_player_results_against_characters(player_id, game_shortname, min_date, exclude_low_level, partial_usage)
 	characters = ausmash_api.get_characters(game_shortname)
 	
 	matchups = {}

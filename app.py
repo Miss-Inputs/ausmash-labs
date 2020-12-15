@@ -59,13 +59,14 @@ def character_matchup_results():
 	if min_date_param:
 		min_date = date.fromisoformat(min_date_param)
 	exclude_low_level = request.query.exclude_low_level == 'on'
+	partial_usage = request.query.partial_usage == 'on'
 	
 	try:
 		player_id = ausmash_api.get_player(region, player)['ID']
 	except HTTPError:
 		return template('character_matchups_error', region=region, name=player)
 
-	matchups = ausmash_lib.get_player_matchups_against_characters(player_id, game, combine_echoes, min_date, exclude_low_level)
+	matchups = ausmash_lib.get_player_matchups_against_characters(player_id, game, combine_echoes, min_date, exclude_low_level, partial_usage)
 	summary = ausmash_lib.group_player_character_matchups(matchups)
 	return template('character_matchups_results', region=region, player=player, game=game, matchups=matchups, summary=summary)
 
